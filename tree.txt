@@ -1,0 +1,57 @@
+.
+├── hypr
+│   ├── hyprland.conf
+│   ├── keybindings.conf
+│   └── scripts
+│       ├── appLaunch
+│       │   ├── colors
+│       │   │   ├── adapta.rasi
+│       │   │   ├── arc.rasi
+│       │   │   ├── black.rasi
+│       │   │   ├── catppuccin.rasi
+│       │   │   ├── cyberpunk.rasi
+│       │   │   ├── dracula.rasi
+│       │   │   ├── everforest.rasi
+│       │   │   ├── gruvbox.rasi
+│       │   │   ├── lovelace.rasi
+│       │   │   ├── navy.rasi
+│       │   │   ├── nord.rasi
+│       │   │   ├── onedark.rasi
+│       │   │   ├── paper.rasi
+│       │   │   ├── solarized.rasi
+│       │   │   ├── tokyonight.rasi
+│       │   │   └── yousai.rasi
+│       │   ├── launcher.sh
+│       │   ├── shared
+│       │   │   ├── colors.rasi
+│       │   │   └── fonts.rasi
+│       │   ├── style-10.rasi
+│       │   ├── style-11.rasi
+│       │   ├── style-12.rasi
+│       │   ├── style-13.rasi
+│       │   ├── style-14.rasi
+│       │   ├── style-15.rasi
+│       │   ├── style-1.rasi
+│       │   ├── style-2.rasi
+│       │   ├── style-3.rasi
+│       │   ├── style-4.rasi
+│       │   ├── style-5.rasi
+│       │   ├── style-6.rasi
+│       │   ├── style-7.rasi
+│       │   ├── style-8.rasi
+│       │   └── style-9.rasi
+│       ├── brightness
+│       ├── hyprpicker
+│       ├── hyprPicker.sh
+│       ├── screensharing.sh
+│       ├── screenshots.sh
+│       ├── startpage.sh
+│       └── volume
+├── nix
+│   ├── configuration.nix
+│   ├── greetd.nix
+│   ├── hardware-configuration.nix
+│   └── vim.nix
+└── tree.txt
+
+7 directories, 48 files
