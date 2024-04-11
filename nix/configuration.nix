@@ -163,10 +163,12 @@
   keepassxc
   mako
   nix-search-cli
+  openssh
   patchutils
   pavucontrol
   piper
   pipewire
+  python313  
   rofi-wayland
   swappy
   swaybg
@@ -220,7 +222,6 @@
   programs.gamemode.enable = true;
   services.flatpak.enable = true;
   services.ratbagd.enable = true;
-  services.teamviewer.enable = true;  
 
   environment.sessionVariables = {
   # If your cursor becomes invisible
@@ -237,7 +238,9 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
+  programs.ssh.startAgent = true;
+  programs.gnupg.agent.enable = true;  
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
