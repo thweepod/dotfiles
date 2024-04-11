@@ -168,7 +168,8 @@
   pavucontrol
   piper
   pipewire
-  python313  
+  python313
+  python3Packages.requests  
   rofi-wayland
   swappy
   swaybg
