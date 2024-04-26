@@ -168,8 +168,6 @@
   pavucontrol
   piper
   pipewire
-  python313
-  python3Packages.requests  
   rofi-wayland
   swappy
   swaybg
@@ -223,7 +221,8 @@
   programs.gamemode.enable = true;
   services.flatpak.enable = true;
   services.ratbagd.enable = true;
-
+  hardware.xone.enable = true;
+ 
   environment.sessionVariables = {
   # If your cursor becomes invisible
     WLR_NO_HARDWARE_CURSORS = "1";
