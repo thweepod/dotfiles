@@ -49,6 +49,7 @@
       ./hardware-configuration.nix
       ./greetd.nix
       ./vim.nix
+      ./steam.nix
     ];
 
   # Bootloader.
@@ -136,10 +137,8 @@
       firefox
       grimblast
       kitty
-      mangohud
       openshot-qt
       samrewritten
-      steam
       stremio
       vlc
       xwaylandvideobridge
@@ -205,11 +204,6 @@
     proggyfonts
   ];
   
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
 
   # List services that you want to enable:
 
@@ -218,7 +212,6 @@
   programs.noisetorch.enable = true; 
   programs.mtr.enable = true;
   programs.nix-ld.enable = true; 
-  programs.gamemode.enable = true;
   services.flatpak.enable = true;
   services.ratbagd.enable = true;
   hardware.xone.enable = true;
