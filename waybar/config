@@ -8,7 +8,7 @@
     "spacing": 5, // Gaps between modules (4px)
     "modules-left": ["custom/launcher", "cpu", "memory", "hyprland/workspaces", "custom/weather"],
     "modules-center": ["custom/spotify"],
-    "modules-right": ["tray", "backlight", "pulseaudio", "network", "battery", "clock", "custom/power-menu"],
+    "modules-right": ["tray", "gamemode", "pulseaudio", "network", "battery","clock", "custom/power-menu"],
     "hyprland/workspaces": {
       "format": "{icon}",
       "on-click": "activate",
@@ -23,11 +23,20 @@
         "default": ""
       }
     },
-    "hyprland/window": {
-        "format": "{}"
-    },
     "tray": {
         "spacing": 5
+    },
+
+     "gamemode": {
+  	"format": "󱎓",
+  	"format-alt": "󱎓 {count}",
+  	"format-icons": "󱎓",
+        "use-icon": false,
+        "icon-spacing": 1,
+        "icon-size": 1,
+  	"hide-not-running": true,
+  	"tooltip": true,
+  	"tooltip-format": "Games running: {count}"
     },
     "clock": {
         "format": "<span color='#bf616a'> </span>{:%a %b %d}",

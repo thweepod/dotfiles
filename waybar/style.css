@@ -60,10 +60,12 @@ window#waybar.hidden {
 #pulseaudio,
 #custom-media,
 #tray,
+#gamemode,
 #mode,
 #idle_inhibitor,
 #mpd,
 #bluetooth,
+#hyprland-window,
 #custom-hyprPicker,
 #custom-power-menu,
 #custom-spotify,
@@ -159,6 +161,15 @@ window#waybar.hidden {
 
 #pulseaudio {
   color: #7d9bba;
+}
+
+#gamemode {
+  color: #91959c;
+}
+
+#window {
+  margin: 3px;
+  padding: 5px;
 }
 
 #backlight {

@@ -3,65 +3,38 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
-
 {
-  
-  # Enable OpenGL
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
 
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+ # Enable OpenGL
+ hardware.graphics = {
+   enable = true;
+   enable32Bit = true;
+};
 
-  hardware.nvidia = {
+services.xserver.videoDrivers = ["nvidia"];
 
-    # Modesetting is required.
-    modesetting.enable = true;
+hardware.nvidia = {
+  modesetting.enable = true;
+  powerManagement.enable = false;
+  powerManagement.finegrained = false;
+  open = false;
+  package = config.boot.kernelPackages.nvidiaPackages.stable;
+};
 
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.enable = false;
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-    # Only available from driver 515.43.04+
-    # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = false;
-
-    # Enable the Nvidia settings menu,
-	# accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
-
-  imports =
+   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./greetd.nix
-      ./vim.nix
       ./steam.nix
+      ./vim.nix
     ];
 
+  # Boot options
+  boot.kernelParams = [ "nvidia-drm.modeset=1" "nvidia-drm.fbdev=1" ];
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  
-  # Extra modules required at boot
-  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-  boot.kernelModules = [
-    "v4l2loopback"
-    ];
-   
+
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -90,69 +63,56 @@
     LC_TIME = "en_AU.UTF-8";
   };
 
-  # Enabling hyprland on NixOS
-   programs.hyprland = {
-    enable = true;
-    enableNvidiaPatches = true;
-    xwayland.enable = true;
-  };
-
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+    xkb.layout = "us";
+    xkb.variant = "";
   };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  sound.enable = true;
+ 
+ 
+ # Enable Pulse/Pipewire
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
+    wireplumber.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tripod = {
     isNormalUser = true;
     description = "tripod";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
     packages = with pkgs; [
       (pkgs.nnn.override { withNerdIcons = true;})
-      discord
+     # (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {})
+      (pkgs.wrapOBS { plugins = [ pkgs.obs-studio-plugins.obs-vkcapture ]; })
       firefox
+      discord
+      discover-overlay
+     # vesktop
       grimblast
       kitty
       openshot-qt
       samrewritten
       stremio
       vlc
-      xwaylandvideobridge
-    ];
-  };
+  ];
+   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
+
   environment.systemPackages = with pkgs; [
-  (pkgs.wrapOBS { plugins = [ pkgs.obs-studio-plugins.obs-vkcapture ]; })
-  appimage-run
   btop
   dbus
   git
@@ -165,16 +125,17 @@
   openssh
   patchutils
   pavucontrol
+  phinger-cursors
   piper
-  pipewire
   rofi-wayland
+  protonup
   swappy
   swaybg
   veracrypt
   waybar
   wl-clipboard
-  xdg-desktop-portal-hyprland
- ];
+  xwaylandvideobridge
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -183,6 +144,32 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  programs.hyprland.enable = true;
+  programs.xwayland.enable = true;
+
+
+  environment.sessionVariables = {
+  # If your cursor becomes invisible
+    WLR_NO_HARDWARE_CURSORS = "1";
+  # Hint electron apps to use wayland
+    NIXOS_OZONE_WL = "1";
+  # Firefox fix
+    MOZ_ENABLE_WAYLAND = 0;
+  };
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Screensharing
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-hyprland
+  ];
+ };
 
   # Fonts
 
@@ -203,37 +190,21 @@
     dina-font
     proggyfonts
   ];
-  
+
 
   # List services that you want to enable:
-
-  hardware.ckb-next.enable = true; 
-  programs.wshowkeys.enable = true;
-  programs.noisetorch.enable = true; 
-  programs.mtr.enable = true;
-  programs.nix-ld.enable = true; 
-  services.flatpak.enable = true;
-  services.ratbagd.enable = true;
-  hardware.xone.enable = true;
- 
-  environment.sessionVariables = {
-  # If your cursor becomes invisible
-    WLR_NO_HARDWARE_CURSORS = "1";
-  # Hint electron apps to use wayland
-    NIXOS_OZONE_WL = "1";
-  };
-
-  # XDG portal
-
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];  
+   
+   hardware.ckb-next.enable = true; 
+   programs.wshowkeys.enable = true;
+   programs.noisetorch.enable = true; 
+   programs.mtr.enable = true;
+   programs.nix-ld.enable = true; 
+   services.flatpak.enable = true;
+   services.ratbagd.enable = true;
+   hardware.xone.enable = true;
   
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  programs.ssh.startAgent = true;
-  programs.gnupg.agent.enable = true;  
+  # services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
