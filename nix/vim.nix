@@ -13,6 +13,7 @@
       vimrcConfig.customRC = ''
         " your custom vimrc
         set nocompatible
+	set number
         set backspace=indent,eol,start
         " Turn on syntax highlighting by default
         syntax on
